@@ -1,8 +1,6 @@
-package com.ranxom.xpense
+package com.ranxom.xpense.screens
 
-import android.media.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,10 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.materialIcon
-import androidx.compose.material.icons.rounded.ArrowDropDown
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -28,13 +28,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.ranxom.xpense.data.local.TransactionItem
 import com.ranxom.xpense.ui.theme.XPenseTheme
-import com.ranxom.xpense.ui.theme.lightGray
-import com.ranxom.xpense.ui.theme.mediumGray
 
 @Composable
 fun HomeScreen() {
@@ -45,9 +45,9 @@ fun HomeScreen() {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background) // Dynamic background
+                .background(MaterialTheme.colorScheme.surface) // Dynamic background
         ) {
-            val (nameRow, list, card) = createRefs()
+            val (nameRow, card, recentTransactions) = createRefs()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,9 +80,123 @@ fun HomeScreen() {
                         end.linkTo(parent.end)
                     }
             )
+            RecentTransactionsSection(
+                modifier = Modifier
+                    .constrainAs(recentTransactions) {
+                        top.linkTo(card.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
         }
     }
 }
+
+@Composable
+fun TransactionList() {
+    // Sample list of transactions
+    val transactions = listOf(
+        TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
+        TransactionItem(amount = 1500.0, dateAndTime = "2025-01-06", isDebit = false),
+        TransactionItem(amount = 300.0, dateAndTime = "2025-01-07", isDebit = true),
+        TransactionItem(amount = 1000.0, dateAndTime = "2025-01-08", isDebit = false),
+        TransactionItem(amount = 1500.0, dateAndTime = "2025-01-06", isDebit = false),
+        TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
+    )
+
+    val scrollState = rememberScrollState()
+
+    // Display the list using a Scrollable Column
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+            .verticalScroll(scrollState) // Add vertical scrolling
+    ) {
+        transactions.forEach { transaction ->
+            // Pass each transaction to the UI
+            TransactionItemUI(transaction = transaction)
+            Spacer(modifier = Modifier.height(12.dp))
+        }
+    }
+}
+
+
+@Composable
+fun TransactionItemUI(transaction: TransactionItem) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.background)
+            .padding(12.dp)
+            .padding(bottom = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Left side: Amount & Date-Time
+        Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            // Title: Amount
+            Text(
+                text = transaction.amount.toString(),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            // Subtitle: Date and Time
+            Text(
+                text = transaction.dateAndTime,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        }
+
+        // Right side: Arrow (Green or Red)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            // Green or Red Arrow based on whether it's Debit or Credit
+            Icon(
+                imageVector = if (transaction.isDebit) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+                contentDescription = null,
+                tint = if (transaction.isDebit) Color.Green else Color.Red
+            )
+        }
+    }
+}
+
+@Composable
+fun RecentTransactionsSection(modifier: Modifier) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Text(
+                text = "Recent Transactions",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Text(
+                text = "See All",
+                fontSize = 16.sp,
+                textDecoration = TextDecoration.Underline,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.align(Alignment.CenterEnd)
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        TransactionList()
+    }
+}
+
+
 
 @Composable
 fun CardSection(modifier: Modifier) {
@@ -90,7 +204,7 @@ fun CardSection(modifier: Modifier) {
         modifier = modifier
             .padding(4.dp)
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background) // Dynamic card background
+            .background(MaterialTheme.colorScheme.surface) // Dynamic card background
             .padding(16.dp)
     ) {
         // Total Balance Section
@@ -110,7 +224,7 @@ fun CardSection(modifier: Modifier) {
                 Text(
                     text = "T O T A L  B A L A N C E",
                     fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurface // Dynamic text color
+                    color = MaterialTheme.colorScheme.onSurface.copy(0.8f) // Dynamic text color
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -135,20 +249,20 @@ fun CardSection(modifier: Modifier) {
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.secondary)
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "T O T A L  I N C O M E",
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface.copy(0.8f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
-                        Icons.Rounded.ArrowDropDown,
+                        Icons.Rounded.KeyboardArrowDown,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface // Dynamic icon tint
+                        tint = Color.Green.copy(0.5f)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -167,20 +281,20 @@ fun CardSection(modifier: Modifier) {
                 modifier = Modifier
                     .weight(1f)
                     .clip(RoundedCornerShape(12.dp))
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.secondary)
                     .padding(16.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = "T O T A L  E X P E N S E",
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = MaterialTheme.colorScheme.onSurface.copy(0.8f)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Icon(
-                        Icons.Rounded.ArrowDropDown,
+                        Icons.Rounded.KeyboardArrowUp,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurface
+                        tint = Color.Red.copy(0.8f)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
@@ -194,9 +308,6 @@ fun CardSection(modifier: Modifier) {
         }
     }
 }
-
-
-
 
 
 

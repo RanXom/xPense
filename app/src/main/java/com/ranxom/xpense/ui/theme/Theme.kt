@@ -15,26 +15,26 @@ private val DarkColorScheme = darkColorScheme(
     primary = darkGray,
     secondary = darkerGray,
     tertiary = grayBlack,
-    background = Color.Black,
-    surface = Color(0xFF121212),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color.White,
-    onSurface = Color.White
+    background = lightBlack,
+    surface = Black,
+    onPrimary = White,
+    onSecondary = White,
+    onTertiary = White,
+    onBackground = White,
+    onSurface = White
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = lightGray,
     secondary = mediumGray,
     tertiary = lightDarkGrey,
-    background = Color.White,
-    surface = Color(0xFFF5F5F5),
-    onPrimary = Color.Black,
-    onSecondary = Color.Black,
-    onTertiary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black
+    background = White,
+    surface = Cream,
+    onPrimary = Black,
+    onSecondary = Black,
+    onTertiary = Black,
+    onBackground = Black,
+    onSurface = Black
 )
 
 @Composable
@@ -49,7 +49,7 @@ fun XPenseTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.surface.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
         }
     }
