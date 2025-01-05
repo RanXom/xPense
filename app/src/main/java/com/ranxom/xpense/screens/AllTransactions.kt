@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.ranxom.xpense.ui.theme.XPenseTheme
 import com.ranxom.xpense.viewmodel.TransactionViewModel
@@ -45,8 +46,15 @@ fun AllTransactions(viewModel: TransactionViewModel, onBackClicked: () -> Unit) 
                 .padding(paddingValues),
             color = MaterialTheme.colorScheme.surface
         ) {
-
-            TransactionList(transactions = transactions.sortedByDescending { it.timestamp })
+            if (transactions.isEmpty()) {
+                Text(
+                    text = "No Transactions Found",
+                    modifier = Modifier.fillMaxSize(),
+                    textAlign = TextAlign.Center
+                )
+            } else {
+                TransactionList(transactions = transactions.sortedByDescending { it.timestamp })
+            }
         }
     }
 }
