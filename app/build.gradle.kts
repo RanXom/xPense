@@ -69,6 +69,7 @@ dependencies {
     implementation("androidx.compose.material:material:$compose_version")
     implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
     implementation("androidx.compose.runtime:runtime-livedata:1.4.3")
+    implementation("com.google.accompanist:accompanist-pager:0.24.13-rc")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")

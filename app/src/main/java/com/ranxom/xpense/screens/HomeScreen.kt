@@ -15,10 +15,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -44,59 +49,72 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     viewModel: TransactionViewModel,
-    onSeeAllClicked: () -> Unit
+    onSeeAllClicked: () -> Unit,
+    onAddTransactionClicked: () -> Unit
 ) {
     val transactions by viewModel.transactions.observeAsState(emptyList())
 
     val totalIncome = transactions.filter { !it.isDebit }.sumOf { it.amount }
     val totalExpense = transactions.filter { it.isDebit }.sumOf { it.amount }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.surface
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface)
-        ) {
-            // Name Section
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp, start = 16.dp, end = 16.dp)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddTransactionClicked,
+                containerColor = MaterialTheme.colorScheme.secondary
             ) {
-                Column {
-                    Text(
-                        text = "Good Afternoon",
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                    Text(
-                        text = "Shizain",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+                Icon(Icons.Rounded.Add, contentDescription = "Add Transaction")
             }
-
-            // Card Section
-            CardSection(
-                totalIncome = totalIncome,
-                totalExpense = totalExpense,
+        },
+        floatingActionButtonPosition = FabPosition.End,
+    ) { paddingValues ->
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Column(
                 modifier = Modifier
-                    .padding(top = 0.dp)
-            )
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                // Name Section
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 32.dp, start = 16.dp, end = 16.dp)
+                ) {
+                    Column {
+                        Text(
+                            text = "Good Afternoon",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Text(
+                            text = "Shizain",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
 
-            // Recent Transactions Section
-            RecentTransactionsSection(
-                viewModel = viewModel,
-                onSeeAllClicked = onSeeAllClicked,
-                modifier = Modifier
-                    .weight(1f) // This is key for proper scrolling
-                    .padding(top = 0.dp)
-            )
+                // Card Section
+                CardSection(
+                    totalIncome = totalIncome,
+                    totalExpense = totalExpense,
+                    modifier = Modifier
+                        .padding(top = 0.dp)
+                )
+
+                // Recent Transactions Section
+                RecentTransactionsSection(
+                    viewModel = viewModel,
+                    onSeeAllClicked = onSeeAllClicked,
+                    modifier = Modifier
+                        .weight(1f) // This is key for proper scrolling
+                        .padding(top = 0.dp)
+                )
+            }
         }
     }
 }
@@ -322,6 +340,6 @@ fun CardSection(totalIncome: Double, totalExpense: Double,modifier: Modifier) {
 @Composable
 fun HomeScreenPreview() {
     XPenseTheme(darkTheme = false) {
-        HomeScreen(viewModel = TransactionViewModel(), onSeeAllClicked = {})
+        HomeScreen(viewModel = TransactionViewModel(), onSeeAllClicked = {}, onAddTransactionClicked = {})
     }
 }
