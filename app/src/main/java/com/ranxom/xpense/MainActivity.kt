@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,9 +29,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Create ViewModel instance
-            val viewModel: TransactionViewModel = viewModel()
-
             // Create an OnboardingManager instance to check if onboarding is completed
             val onboardingManager = OnBoardingManager(this)
             val onboardingCompletedState = remember {
@@ -46,7 +44,7 @@ class MainActivity : ComponentActivity() {
                     // Observe onboarding completion state
                     if (onboardingCompletedState.value) {
                         // After onboarding is complete, navigate to the main app
-                        AppNavigator(viewModel = viewModel)
+                        AppNavigator()
                     } else {
                         // Show OnboardingScreen until it's completed
                         OnBoardingScreen(onFinishOnboarding = {
@@ -65,26 +63,21 @@ class MainActivity : ComponentActivity() {
 
 // Navigation Component
 @Composable
-fun AppNavigator(viewModel: TransactionViewModel) {
+fun AppNavigator() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "home") {
-        // Home Screen Route
         composable("home") {
+            val viewModel: TransactionViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = viewModel,
                 onSeeAllClicked = { navController.navigate("all_transactions") },
                 onAddTransactionClicked = { navController.navigate("add_transaction") }
             )
         }
-        // Screen Routes
-        composable("all_transactions") {
-            AllTransactions(
-                viewModel = viewModel,
-                onBackClicked = { navController.popBackStack() }
-            )
-        }
+
         composable("add_transaction") {
+            val viewModel: TransactionViewModel = hiltViewModel()
             AddTransactionScreen(
                 onAddTransaction = { transactionItem ->
                     viewModel.addTransaction(transactionItem)
@@ -93,6 +86,13 @@ fun AppNavigator(viewModel: TransactionViewModel) {
                 onBackClicked = { navController.popBackStack() }
             )
         }
+
+        composable("all_transactions") {
+            val viewModel: TransactionViewModel = hiltViewModel()
+            AllTransactions(
+                viewModel = viewModel,
+                onBackClicked = { navController.popBackStack() }
+            )
+        }
     }
 }
-

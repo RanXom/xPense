@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ranxom.xpense.data.local.TransactionItem
 import com.ranxom.xpense.data.local.TransactionSource
@@ -44,7 +45,7 @@ fun AddTransactionScreen(
     onDismiss: () -> Unit,
     onBackClicked: () -> Unit
 ) {
-    val viewModel: TransactionViewModel = viewModel()
+    val viewModel: TransactionViewModel = hiltViewModel()
 
     var amount by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
@@ -169,10 +170,10 @@ fun AddTransactionScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun AddTransactionPreview(){
-    XPenseTheme(darkTheme = false) {
-        AddTransactionScreen(onAddTransaction = {}, onDismiss = {}, onBackClicked = {})
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun AddTransactionPreview(){
+//    XPenseTheme(darkTheme = false) {
+//        AddTransactionScreen(onAddTransaction = {}, onDismiss = {}, onBackClicked = {})
+//    }
+//}
