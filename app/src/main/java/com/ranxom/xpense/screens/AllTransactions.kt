@@ -1,7 +1,5 @@
 package com.ranxom.xpense.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -16,17 +14,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.ranxom.xpense.ui.theme.XPenseTheme
 import com.ranxom.xpense.viewmodel.TransactionViewModel
 
+import androidx.compose.runtime.collectAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AllTransactions(viewModel: TransactionViewModel, onBackClicked: () -> Unit) {
-    val transactions by viewModel.transactions.observeAsState(emptyList())
+fun AllTransactions(
+    viewModel: TransactionViewModel = viewModel(), // Ensure correct ViewModel injection
+    onBackClicked: () -> Unit
+) {
+    val transactions by viewModel.transactions.collectAsState()
 
     Scaffold(
         topBar = {
@@ -60,10 +63,11 @@ fun AllTransactions(viewModel: TransactionViewModel, onBackClicked: () -> Unit) 
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun AllTransactionPreview() {
-    XPenseTheme(darkTheme = false) {
-        AllTransactions(viewModel = TransactionViewModel(), onBackClicked = {})
-    }
-}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun AllTransactionPreview() {
+//    XPenseTheme(darkTheme = false) {
+//        AllTransactions(viewModel = TransactionViewModel(), onBackClicked = {})
+//    }
+//}
