@@ -39,15 +39,14 @@ fun AllTransactions(viewModel: TransactionViewModel, onBackClicked: () -> Unit) 
             )
         }
     ) { paddingValues ->
-        // Wrap the content inside Surface to set the background color properly
         Surface(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             color = MaterialTheme.colorScheme.surface
         ) {
-            // Your content here
-            TransactionList(transactions = transactions)
+
+            TransactionList(transactions = transactions.sortedByDescending { it.timestamp })
         }
     }
 }

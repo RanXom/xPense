@@ -1,5 +1,6 @@
 package com.ranxom.xpense.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,6 +47,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(
     viewModel: TransactionViewModel,
@@ -67,7 +69,7 @@ fun HomeScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.End,
-    ) { paddingValues ->
+    ) {paddingValues ->
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.surface
@@ -103,7 +105,7 @@ fun HomeScreen(
                     totalIncome = totalIncome,
                     totalExpense = totalExpense,
                     modifier = Modifier
-                        .padding(top = 0.dp)
+                        .padding(paddingValues)
                 )
 
                 // Recent Transactions Section
@@ -112,7 +114,7 @@ fun HomeScreen(
                     onSeeAllClicked = onSeeAllClicked,
                     modifier = Modifier
                         .weight(1f) // This is key for proper scrolling
-                        .padding(top = 0.dp)
+                        .padding(paddingValues)
                 )
             }
         }
@@ -216,7 +218,7 @@ fun RecentTransactionsSection(viewModel: TransactionViewModel, onSeeAllClicked: 
         }
         Spacer(modifier = Modifier.height(8.dp))
         TransactionList(
-            transactions = transactions.take(10) // Show only last 10 transactions
+            transactions = transactions.sortedByDescending { it.timestamp }.take(10)
         )
     }
 }
