@@ -192,6 +192,7 @@ fun WelcomeScreen() {
     }
 }
 
+// TODO: Setup Authentication Backend & Store it in ROOM?
 @Composable
 fun AuthenticationSetupScreen() {
     Column(
@@ -207,6 +208,7 @@ fun AuthenticationSetupScreen() {
     }
 }
 
+// TODO: Setup SMS Permission for autofetch transactions
 @Composable
 fun SmsPermissionScreen() {
     Column(
@@ -221,6 +223,10 @@ fun SmsPermissionScreen() {
         Text("Allow access to SMS for automatic expense tracking.", textAlign = TextAlign.Center)
     }
 }
+
+/*
+TODO: ADD a fourth screen for inputting username & initial balance (Store them in ROOM)
+*/
 
 @Preview(showBackground = true)
 @Composable

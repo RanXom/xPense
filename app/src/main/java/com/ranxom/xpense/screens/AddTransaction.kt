@@ -127,7 +127,7 @@ fun AddTransactionScreen(
                             containerColor = if (isDebit) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                         )
                     ) {
-                        Text("Expense")
+                        Text("Income")
                     }
 
                     Button(
@@ -136,7 +136,7 @@ fun AddTransactionScreen(
                             containerColor = if (!isDebit) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                         )
                     ) {
-                        Text("Income")
+                        Text("Expense")
                     }
                 }
 

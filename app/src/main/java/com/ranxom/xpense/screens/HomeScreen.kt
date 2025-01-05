@@ -89,6 +89,7 @@ fun HomeScreen(
                 ) {
                     Column {
                         Text(
+                            // TODO: Dynamic Greeting
                             text = "Good Afternoon",
                             fontSize = 16.sp,
                             color = MaterialTheme.colorScheme.onBackground
