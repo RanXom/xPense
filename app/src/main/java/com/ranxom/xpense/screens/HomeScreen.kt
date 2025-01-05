@@ -46,6 +46,11 @@ fun HomeScreen(
     viewModel: TransactionViewModel,
     onSeeAllClicked: () -> Unit
 ) {
+    val transactions by viewModel.transactions.observeAsState(emptyList())
+
+    val totalIncome = transactions.filter { !it.isDebit }.sumOf { it.amount }
+    val totalExpense = transactions.filter { it.isDebit }.sumOf { it.amount }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.surface
@@ -78,6 +83,8 @@ fun HomeScreen(
 
             // Card Section
             CardSection(
+                totalIncome = totalIncome,
+                totalExpense = totalExpense,
                 modifier = Modifier
                     .padding(top = 0.dp)
             )
@@ -199,7 +206,7 @@ fun RecentTransactionsSection(viewModel: TransactionViewModel, onSeeAllClicked: 
 
 
 @Composable
-fun CardSection(modifier: Modifier) {
+fun CardSection(totalIncome: Double, totalExpense: Double,modifier: Modifier) {
     Column(
         modifier = modifier
             .padding(4.dp)
@@ -228,7 +235,7 @@ fun CardSection(modifier: Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$10,000",
+                    text = "$${totalIncome - totalExpense}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface // Dynamic text color
@@ -267,7 +274,7 @@ fun CardSection(modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$15,000",
+                    text = "$${totalIncome}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -299,7 +306,7 @@ fun CardSection(modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$5,000",
+                    text = "$${totalExpense}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
