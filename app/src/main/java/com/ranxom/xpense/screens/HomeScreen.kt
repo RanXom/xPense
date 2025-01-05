@@ -21,7 +21,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,12 +36,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ranxom.xpense.data.local.TransactionItem
 import com.ranxom.xpense.ui.theme.XPenseTheme
+import com.ranxom.xpense.viewmodel.TransactionViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    viewModel: TransactionViewModel,
+    onSeeAllClicked: () -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.surface
     ) {
         Column(
             modifier = Modifier
@@ -74,6 +84,8 @@ fun HomeScreen() {
 
             // Recent Transactions Section
             RecentTransactionsSection(
+                viewModel = viewModel,
+                onSeeAllClicked = onSeeAllClicked,
                 modifier = Modifier
                     .weight(1f) // This is key for proper scrolling
                     .padding(top = 0.dp)
@@ -83,16 +95,7 @@ fun HomeScreen() {
 }
 
 @Composable
-fun TransactionList() {
-    val transactions = listOf(
-        TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
-        TransactionItem(amount = 1500.0, dateAndTime = "2025-01-06", isDebit = false),
-        TransactionItem(amount = 300.0, dateAndTime = "2025-01-07", isDebit = true),
-        TransactionItem(amount = 1000.0, dateAndTime = "2025-01-08", isDebit = false),
-        TransactionItem(amount = 1500.0, dateAndTime = "2025-01-06", isDebit = false),
-        TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
-    )
-
+fun TransactionList(transactions: List<TransactionItem>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -125,14 +128,17 @@ fun TransactionItemUI(transaction: TransactionItem) {
         ) {
             // Title: Amount
             Text(
-                text = transaction.amount.toString(),
+                text = "$"+transaction.amount.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
             )
             // Subtitle: Date and Time
+            val formattedDate = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault()).format(
+                Date(transaction.timestamp)
+            )
             Text(
-                text = transaction.dateAndTime,
+                text = formattedDate,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -154,7 +160,8 @@ fun TransactionItemUI(transaction: TransactionItem) {
 }
 
 @Composable
-fun RecentTransactionsSection(modifier: Modifier) {
+fun RecentTransactionsSection(viewModel: TransactionViewModel, onSeeAllClicked: () -> Unit, modifier: Modifier) {
+    val transactions by viewModel.transactions.observeAsState(emptyList())
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -170,16 +177,22 @@ fun RecentTransactionsSection(modifier: Modifier) {
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            Text(
-                text = "See All",
-                fontSize = 16.sp,
-                textDecoration = TextDecoration.Underline,
-                color = MaterialTheme.colorScheme.onBackground,
+            TextButton(
+                onClick = onSeeAllClicked,
                 modifier = Modifier.align(Alignment.CenterEnd)
-            )
+            ) {
+                Text(
+                    text = "See All",
+                    fontSize = 16.sp,
+                    textDecoration = TextDecoration.Underline,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+            }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        TransactionList()
+        TransactionList(
+            transactions = transactions.take(10) // Show only last 10 transactions
+        )
     }
 }
 
@@ -302,6 +315,6 @@ fun CardSection(modifier: Modifier) {
 @Composable
 fun HomeScreenPreview() {
     XPenseTheme(darkTheme = false) {
-        HomeScreen()
+        HomeScreen(viewModel = TransactionViewModel(), onSeeAllClicked = {})
     }
 }

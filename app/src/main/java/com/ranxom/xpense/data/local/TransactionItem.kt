@@ -8,9 +8,12 @@ data class TransactionItem(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val amount: Double,
-    val dateAndTime: String,
+    val timestamp: Long,
     val isDebit: Boolean,
     val description: String? = null,
     val category: String? = null,
-    val messageId: String? = null // For linking with SMS messages
+    val source: TransactionSource // For linking with SMS messages
 )
+enum class TransactionSource {
+    SMS, MANUAL
+}

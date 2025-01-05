@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM transactions ORDER BY dateAndTime DESC")
+    @Query("SELECT * FROM transactions ORDER BY timestamp DESC")
     fun getAllTransactions(): Flow<List<TransactionItem>>
 
-    @Query("SELECT * FROM transactions WHERE strftime('%Y-%m', dateAndTime) = :yearMonth ORDER BY dateAndTime DESC")
+    @Query("SELECT * FROM transactions WHERE strftime('%Y-%m', datetime(timestamp / 1000, 'unixepoch')) = :yearMonth ORDER BY timestamp DESC")
     fun getTransactionsByMonth(yearMonth: String): Flow<List<TransactionItem>>
 
     @Query("SELECT SUM(amount) FROM transactions WHERE isDebit = 0")

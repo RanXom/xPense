@@ -7,7 +7,7 @@ import com.ranxom.xpense.data.local.dao.TransactionDao
 
 @Database(
     entities = [TransactionItem::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class XPenseDatabase : RoomDatabase() {
