@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -32,7 +31,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
 import com.ranxom.xpense.data.local.TransactionItem
 import com.ranxom.xpense.ui.theme.XPenseTheme
 
@@ -40,53 +38,45 @@ import com.ranxom.xpense.ui.theme.XPenseTheme
 fun HomeScreen() {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background // Dynamic background color
+        color = MaterialTheme.colorScheme.background
     ) {
-        ConstraintLayout(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface) // Dynamic background
+                .background(MaterialTheme.colorScheme.surface)
         ) {
-            val (nameRow, card, recentTransactions) = createRefs()
+            // Name Section
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp, start = 16.dp, end = 16.dp)
-                    .constrainAs(nameRow) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
             ) {
                 Column {
                     Text(
                         text = "Good Afternoon",
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground // Dynamic text color
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                     Text(
                         text = "Shizain",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground // Dynamic text color
+                        color = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
+
+            // Card Section
             CardSection(
                 modifier = Modifier
-                    .constrainAs(card) {
-                        top.linkTo(nameRow.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
+                    .padding(top = 0.dp)
             )
+
+            // Recent Transactions Section
             RecentTransactionsSection(
                 modifier = Modifier
-                    .constrainAs(recentTransactions) {
-                        top.linkTo(card.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
+                    .weight(1f) // This is key for proper scrolling
+                    .padding(top = 0.dp)
             )
         }
     }
@@ -94,7 +84,6 @@ fun HomeScreen() {
 
 @Composable
 fun TransactionList() {
-    // Sample list of transactions
     val transactions = listOf(
         TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
         TransactionItem(amount = 1500.0, dateAndTime = "2025-01-06", isDebit = false),
@@ -104,16 +93,13 @@ fun TransactionList() {
         TransactionItem(amount = 500.0, dateAndTime = "2025-01-05", isDebit = true),
     )
 
-    val scrollState = rememberScrollState()
-
-    // Display the list using a Scrollable Column
     Column(
         modifier = Modifier
-            .fillMaxHeight()
-            .verticalScroll(scrollState) // Add vertical scrolling
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         transactions.forEach { transaction ->
-            // Pass each transaction to the UI
             TransactionItemUI(transaction = transaction)
             Spacer(modifier = Modifier.height(12.dp))
         }
@@ -171,12 +157,13 @@ fun TransactionItemUI(transaction: TransactionItem) {
 fun RecentTransactionsSection(modifier: Modifier) {
     Column(
         modifier = modifier
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
         Box(
-            modifier = Modifier.fillMaxWidth()
-        ){
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        ) {
             Text(
                 text = "Recent Transactions",
                 fontSize = 22.sp,
