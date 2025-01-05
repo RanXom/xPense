@@ -158,7 +158,7 @@ fun TransactionItemUI(transaction: TransactionItem) {
         ) {
             // Title: Amount
             Text(
-                text = "$"+transaction.amount.toString(),
+                text = "₹"+transaction.amount.toString(),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface
@@ -266,7 +266,7 @@ fun CardSection(totalIncome: Double, totalExpense: Double,modifier: Modifier) {
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$${totalIncome - totalExpense}",
+                    text = "₹${totalIncome - totalExpense}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface // Dynamic text color
@@ -305,7 +305,7 @@ fun CardSection(totalIncome: Double, totalExpense: Double,modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$${totalIncome}",
+                    text = "₹${totalIncome}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -337,7 +337,7 @@ fun CardSection(totalIncome: Double, totalExpense: Double,modifier: Modifier) {
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "$${totalExpense}",
+                    text = "₹${totalExpense}",
                     fontSize = 26.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
