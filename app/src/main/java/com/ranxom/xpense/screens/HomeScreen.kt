@@ -139,7 +139,7 @@ fun TransactionList(transactions: List<TransactionItem>) {
     }
 }
 
-
+// TODO: Expandable Card to Show Description & Category
 @Composable
 fun TransactionItemUI(transaction: TransactionItem) {
     Row(
@@ -181,9 +181,9 @@ fun TransactionItemUI(transaction: TransactionItem) {
         ) {
             // Green or Red Arrow based on whether it's Debit or Credit
             Icon(
-                imageVector = if (transaction.isDebit) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowUp,
+                imageVector = if (transaction.isDebit) Icons.Rounded.KeyboardArrowUp else Icons.Rounded.KeyboardArrowDown,
                 contentDescription = null,
-                tint = if (transaction.isDebit) Color.Green else Color.Red
+                tint = if (transaction.isDebit) Color.Red else Color.Green
             )
         }
     }

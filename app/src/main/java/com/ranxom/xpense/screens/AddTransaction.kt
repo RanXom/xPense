@@ -117,6 +117,7 @@ fun AddTransactionScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
+                // TODO: Handle for insufficient Balance
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -127,7 +128,7 @@ fun AddTransactionScreen(
                             containerColor = if (isDebit) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                         )
                     ) {
-                        Text("Income")
+                        Text("Expense")
                     }
 
                     Button(
@@ -136,7 +137,7 @@ fun AddTransactionScreen(
                             containerColor = if (!isDebit) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.secondary
                         )
                     ) {
-                        Text("Expense")
+                        Text("Income")
                     }
                 }
 
